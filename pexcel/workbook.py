@@ -1,6 +1,7 @@
 # coding=utf-8
 
-from worksheet import Worksheet
+from .worksheet import Worksheet
+from .writer import Writer
 
 
 class Workbook(object):
@@ -8,12 +9,12 @@ class Workbook(object):
 
     def __init__(self):
         self.worksheets = []
+        self.writer = Writer(self)
 
     def new_sheet(self, sheet_name, data=None, force_name=False):
         sheet = Worksheet(sheet_name, data)
         self.worksheets.append(sheet)
         return sheet
-
 
     def add_sheet(self, worksheet):
         for sheet in worksheet:
@@ -30,4 +31,4 @@ class Workbook(object):
 
     def save(self, filename):
         with open(filename, 'wb') as fp:
-            pass
+            self.writer.save(fp)

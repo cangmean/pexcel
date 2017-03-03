@@ -22,4 +22,4 @@ class Worksheet(object):
 if __name__ == '__main__':
     data = [[1, 2, 3], [4, 5, 6]]
     ws = Worksheet('H5', data)
-    print(ws.cells, ws.columns, ws.rows)
+    print(ws.cells)

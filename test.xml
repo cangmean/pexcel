@@ -1,20 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
-  <sheetPr/>
-  <dimension ref="A1"/>
-  <sheetViews>
-    <sheetView tabSelected="1" workbookViewId="0">
-      <selection activeCell="A1" sqref="A1"/>
-    </sheetView>
-  </sheetViews>
-  <sheetFormatPr defaultColWidth="8.88888888888889" defaultRowHeight="15"/>
-  <sheetData>
-    <row r="1" spans="1:1">
-      <c r="A1" t="s">
-        <v>0</v>
-      </c>
-    </row>
-  </sheetData>
-  <pageMargins left="0.75" right="0.75" top="1" bottom="1" header="0.511805555555556" footer="0.511805555555556"/>
-  <headerFooter/>
-</worksheet>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac" mc:Ignorable="x14ac">
+</styleSheet>
