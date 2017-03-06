@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import re
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 from datetime import datetime
@@ -162,11 +163,25 @@ def worksheet_template(worksheet):
         'defaultRowHeight': '15', 'x14ac:dyDescent': '0.25'
     })
     sheet_data = SubElement(root, 'sheetData')
-    for row_num, columns in worksheet.cells.iteritems():
+    for row_num, _rows in worksheet.cells.iteritems():
         row = SubElement(sheet_data, 'row', {'r': str(row_num)})
-        for col_num, value in columns.iteritems():
-            col = SubElement(row, 'c', {'r': '{}{}'.format(chr(64+col_num), row_num)})
-            SubElement(col, 'v').text = str(value).decode('utf-8')
+        for col_num, cell in _rows.iteritems():
+            col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format})
+            if cell.excel_format == 'n':
+                SubElement(col, 'v').text = str(cell.value).decode('utf-8')
+            elif cell.excel_format == 'str':
+                val = cell.value
+                p = re.compile(r'(\w+?\d+?)')
+                cell_names = p.findall(cell.value)
+                for cell_name in cell_names:
+                    val = val.replace(cell_name, str(worksheet[cell_name].value))
+                else:
+                    exec('v{}'.format(val))
+                    SubElement(col, 'v').text = str(v)
+                SubElement(col, 'f').text = cell.value
+            else:
+                _ = SubElement(col, 'is')
+                SubElement(_, 't').text = str(cell.value).decode('utf-8')
     SubElement(root, 'pageMargins', {
         'left': '0.7', 'right': '0.7', 'top': '0.75',
         'bottom': '0.75', 'header': '0.3', 'footer': '0.3'

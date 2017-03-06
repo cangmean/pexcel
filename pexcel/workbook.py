@@ -11,16 +11,10 @@ class Workbook(object):
         self.worksheets = []
         self.writer = Writer(self)
 
-    def new_sheet(self, sheet_name, data=None, force_name=False):
+    def new_sheet(self, sheet_name, data=None):
         sheet = Worksheet(sheet_name, data)
         self.worksheets.append(sheet)
         return sheet
-
-    def add_sheet(self, worksheet):
-        for sheet in worksheet:
-            if sheet.name == worksheet.name:
-                raise Exception("sheet名 已存在.")
-            self.worksheets.append(sheet)
 
     def get_xml_data(self):
         for idx, sheet in enumerate(self.worksheets, 1):

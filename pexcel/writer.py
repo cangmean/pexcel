@@ -1,9 +1,10 @@
 # coding=utf-8
 
 from zipfile import ZipFile, ZIP_DEFLATED
-from .xml_ import (props_app_template, props_core_template, content_types_template,
-                   rels_template, workbook_template, workbook_rels_template,
-                   worksheet_template, styles_template)
+from .template import (
+    props_app_template, props_core_template, content_types_template,
+    rels_template, workbook_template, workbook_rels_template,
+    worksheet_template, styles_template)
 
 
 class Writer(object):
