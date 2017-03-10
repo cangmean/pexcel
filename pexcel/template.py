@@ -30,6 +30,7 @@ def rels_template():
         SubElement(root, 'Relationship', kw)
     return prettify(root)
 
+
 def content_types_template(workbook):
     elem_list = [
         ('Default', 'rels', 'application/vnd.openxmlformats-package.relationships+xml'),
@@ -37,7 +38,7 @@ def content_types_template(workbook):
         ('Override', '/docProps/core.xml', 'application/vnd.openxmlformats-package.core-properties+xml'),
         ('Override', '/docProps/app.xml', 'application/vnd.openxmlformats-officedocument.extended-properties+xml'),
         ('Override', '/xl/workbook.xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml'),
-        #('Override', '/xl/styles.xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml'),
+        ('Override', '/xl/styles.xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml'),
     ]
     nsmap = {
         'xmlns': 'http://schemas.openxmlformats.org/package/2006/content-types'
@@ -115,10 +116,10 @@ def workbook_rels_template(workbook):
             'Id': 'rId{}'.format(idx), 'Type': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet',
             'Target': 'worksheets/sheet{}.xml'.format(idx)
         })
-    # SubElement(root, 'Relationship', {
-    #     'Id': 'rId1000', 'Type': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
-    #     'Target': 'styles.xml'
-    # })
+    SubElement(root, 'Relationship', {
+        'Id': 'rId1000', 'Type': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles',
+        'Target': 'styles.xml'
+    })
     return prettify(root)
 
 
@@ -166,7 +167,10 @@ def worksheet_template(worksheet):
     for row_num, _rows in worksheet.cells.iteritems():
         row = SubElement(sheet_data, 'row', {'r': str(row_num)})
         for col_num, cell in _rows.iteritems():
-            col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format})
+            if cell.excel_format == 'n':
+                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': '2'})
+            else:
+                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': '1'})
             if cell.excel_format == 'n':
                 SubElement(col, 'v').text = str(cell.value).decode('utf-8')
             elif cell.excel_format == 'str':
@@ -190,6 +194,9 @@ def worksheet_template(worksheet):
 
 
 def styles_template():
+    '''
+    cell中s='1' 表示styles.xml中cellXfs中xf的索引值。也就是调用索引为 1 的xf(下标从0开始)。
+    '''
     nsmap = {
         'xmlns': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
         'xmlns:mc': 'http://schemas.openxmlformats.org/markup-compatibility/2006',
@@ -197,4 +204,24 @@ def styles_template():
         'mc:Ignorable': 'x14ac',
     }
     root = Element('styleSheet', nsmap)
+    num_formats = SubElement(root, 'numFmts', {'count': '1'})
+    SubElement(num_formats, 'numFmt', {
+        'numFmtId': '100', 'formatCode': '$ #,##0.00;$ #,###0.00;-'
+    })
+    fonts = SubElement(root, 'fonts', {'count': '2'})
+    SubElement(fonts, 'font')
+    font = SubElement(fonts, 'font')
+    SubElement(font, 'b')
+    fills = SubElement(root, 'fills', {'count': '1'})
+    SubElement(fills, 'fill')
+    borders = SubElement(root, 'borders', {'count': '1'})
+    SubElement(borders, 'border')
+    cell_style_xfs = SubElement(root, 'cellStyleXfs', {'count': '1'})
+    SubElement(cell_style_xfs, 'xf')
+    cell_xfs = SubElement(root, 'cellXfs', {'count': '3'})
+    SubElement(cell_xfs, 'xf')
+    xf = SubElement(cell_xfs, 'xf', {'fontId': '1'})
+    SubElement(xf, 'alignment', {'horizontal': 'center'})
+    _ = SubElement(cell_xfs, 'xf', {'numFmtId': '100'})
+    SubElement(_, 'alignment', {'horizontal': 'center'})
     return prettify(root)

@@ -6,7 +6,7 @@ from pexcel.template import (props_app_template, props_core_template, content_ty
                          worksheet_template, styles_template)
 
 
-data = [[1, 2, 3], ['hello', 5, 6], ['=(A1+B1)*B2']]
+data = [['hello', 'world', 'excel'], ['hello', 5.33, 6.78]]
 # ws = Worksheet('H5', data)
 # print(ws.cells)
 # for row_num, columns in ws.cells.iteritems():
@@ -16,3 +16,6 @@ data = [[1, 2, 3], ['hello', 5, 6], ['=(A1+B1)*B2']]
 wb = Workbook()
 wb.new_sheet('hello', data)
 wb.save('hello.xlsx')
+
+x = styles_template()
+print(x)

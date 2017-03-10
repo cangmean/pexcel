@@ -26,7 +26,6 @@ class Worksheet(object):
         col, row = p.match(key).groups()
         col, row = ord(col.upper()) - 64, int(row)
         if row > self.rows or col > self.columns:
-            print(row, col)
             raise IndexError('Key {} 超出 Cell的最大索引。'.format(key))
         return self.cells[row][col]
 
