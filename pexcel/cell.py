@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from .style import Style, Font
+
 
 class CellError(Exception):
     pass
@@ -44,17 +46,19 @@ class Cell(object):
         self.column = column
         self.value = value
         self.name = '{}{}'.format(chr(64+self.column), self.row)
+        self.style = Style()
 
-    def _get_styles(self):
-        pass
+    def _get_font(self):
+        return self.style.font
 
-    def _set_styles(self, styles):
-        pass
+    def _set_font(self, font):
+        self.style.font = font
 
-    styles = property(_get_styles, _set_styles)
+    font = property(_get_font, _set_font)
 
     @property
     def val_type(self):
+        '''返回cell value的类型'''
         value = self.value
         if isinstance(value, str):
             if len(value) > 0 and value[0] == '=':
@@ -69,6 +73,7 @@ class Cell(object):
 
     @property
     def excel_format(self):
+        '''返回xml 中格式的简写 '''
         if self.val_type == 'FORMULA':
             return 'str'
         elif self.val_type == 'NUMBER':
@@ -78,7 +83,3 @@ class Cell(object):
 
     def __repr__(self):
         return '<Cell {}>'.format(self.name)
-
-if __name__ == '__main__':
-    a = Cell(row=1, column=2, value=33)
-    print(a.val_type)

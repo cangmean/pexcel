@@ -221,6 +221,7 @@ def styles_template():
     cell_xfs = SubElement(root, 'cellXfs', {'count': '3'})
     SubElement(cell_xfs, 'xf')
     xf = SubElement(cell_xfs, 'xf', {'fontId': '1'})
+
     SubElement(xf, 'alignment', {'horizontal': 'center'})
     _ = SubElement(cell_xfs, 'xf', {'numFmtId': '100'})
     SubElement(_, 'alignment', {'horizontal': 'center'})

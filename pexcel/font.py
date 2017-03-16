@@ -13,6 +13,20 @@ class Font(object):
         self.size = size
         self.color = color
 
+    def __eq__(self, other):
+        return (self.bold, self.italic, self.underline,
+                self.strikethrough, self.family, self.size,
+                self.color) == \
+                (other.bold, other.italic, other.underline,
+                 other.strikethrough, other.family, other.size,
+                 other.color)
+
+    def __hash__(self):
+        # 通过__eq__ 和 __hash__ 指定字典的key相同
+        return hash((self.bold, self.italic, self.underline,
+                     self.strikethrough, self.family, self.size,
+                     self.color))
+
     def __repr__(self):
         suffix = ["{}, {}".format(self.family, self.size)]
         if self.bold:
@@ -23,7 +37,3 @@ class Font(object):
             suffix.append('u')
 
         return "<Font '{}'>".format(' '.join(suffix))
-
-if __name__ == '__main__':
-    f = Font(bold=True, italic=True)
-    print(f)
