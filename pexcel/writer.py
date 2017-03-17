@@ -18,7 +18,7 @@ class Writer(object):
         zf.writestr('docProps/core.xml', props_core_template())
         zf.writestr('[Content_Types].xml', content_types_template(self.workbook))
         zf.writestr('_rels/.rels', rels_template())
-        zf.writestr('xl/styles.xml', styles_template())
+        zf.writestr('xl/styles.xml', styles_template(self.workbook))
         zf.writestr('xl/workbook.xml', workbook_template(self.workbook))
         zf.writestr('xl/_rels/workbook.xml.rels', workbook_rels_template(self.workbook))
         for idx, sheet in self.workbook.get_xml_data():

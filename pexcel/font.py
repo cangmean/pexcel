@@ -13,19 +13,21 @@ class Font(object):
         self.size = size
         self.color = color
 
+    @property
+    def is_default(self):
+        return self.hash_key == Font().hash_key
+
+    @property
+    def hash_key(self):
+        return hash((self.bold, self.italic, self.underline, self.strikethrough,
+                     self.family, self.size, self.color))
+
     def __eq__(self, other):
-        return (self.bold, self.italic, self.underline,
-                self.strikethrough, self.family, self.size,
-                self.color) == \
-                (other.bold, other.italic, other.underline,
-                 other.strikethrough, other.family, other.size,
-                 other.color)
+        return self.hash_key == other.hash_key
 
     def __hash__(self):
         # 通过__eq__ 和 __hash__ 指定字典的key相同
-        return hash((self.bold, self.italic, self.underline,
-                     self.strikethrough, self.family, self.size,
-                     self.color))
+        return self.hash_key
 
     def __repr__(self):
         suffix = ["{}, {}".format(self.family, self.size)]

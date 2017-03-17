@@ -168,9 +168,9 @@ def worksheet_template(worksheet):
         row = SubElement(sheet_data, 'row', {'r': str(row_num)})
         for col_num, cell in _rows.iteritems():
             if cell.excel_format == 'n':
-                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': '2'})
+                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': str(cell.style.id)})
             else:
-                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': '1'})
+                col = SubElement(row, 'c', {'r': cell.name, 't': cell.excel_format, 's': str(cell.style.id)})
             if cell.excel_format == 'n':
                 SubElement(col, 'v').text = str(cell.value).decode('utf-8')
             elif cell.excel_format == 'str':
@@ -193,7 +193,7 @@ def worksheet_template(worksheet):
     return prettify(root)
 
 
-def styles_template():
+def styles_template(workbook):
     '''
     cell中s='1' 表示styles.xml中cellXfs中xf的索引值。也就是调用索引为 1 的xf(下标从0开始)。
     '''
@@ -203,26 +203,38 @@ def styles_template():
         'xmlns:x14ac': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
         'mc:Ignorable': 'x14ac',
     }
+    sheet = workbook.worksheets[0]
     root = Element('styleSheet', nsmap)
     num_formats = SubElement(root, 'numFmts', {'count': '1'})
     SubElement(num_formats, 'numFmt', {
         'numFmtId': '100', 'formatCode': '$ #,##0.00;$ #,###0.00;-'
     })
-    fonts = SubElement(root, 'fonts', {'count': '2'})
-    SubElement(fonts, 'font')
-    font = SubElement(fonts, 'font')
-    SubElement(font, 'b')
+    font_styles = sheet.get_styles()['fonts']
+    # 设置 fonts 样式
+    fonts = SubElement(root, 'fonts', {'count': str(len(font_styles))})
+    for font_style in font_styles:
+        font = SubElement(fonts, 'font')
+        SubElement(font, 'sz', {'val': str(font_style.size) })
+        SubElement(font, 'name', {'val': str(font_style.family)})
+        if font_style.bold:
+            SubElement(font, 'b')
+        if font_style.italic:
+            SubElement(font, 'i')
+        if font_style.underline:
+            SubElement(font, 'u')
+        if font_style.strikethrough:
+            SubElement(font, 'strike')
     fills = SubElement(root, 'fills', {'count': '1'})
     SubElement(fills, 'fill')
     borders = SubElement(root, 'borders', {'count': '1'})
     SubElement(borders, 'border')
+
     cell_style_xfs = SubElement(root, 'cellStyleXfs', {'count': '1'})
     SubElement(cell_style_xfs, 'xf')
+    # 设置 cell 样式
+    cell_styles = sheet.styles
     cell_xfs = SubElement(root, 'cellXfs', {'count': '3'})
-    SubElement(cell_xfs, 'xf')
-    xf = SubElement(cell_xfs, 'xf', {'fontId': '1'})
+    for cell_style in cell_styles:
+        xf = SubElement(cell_xfs, 'xf', {'fontId': str(cell_style.font.id)})
 
-    SubElement(xf, 'alignment', {'horizontal': 'center'})
-    _ = SubElement(cell_xfs, 'xf', {'numFmtId': '100'})
-    SubElement(_, 'alignment', {'horizontal': 'center'})
     return prettify(root)

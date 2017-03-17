@@ -10,16 +10,24 @@ from .font import Font
 class Style(object):
 
     def __init__(self):
-        self.font = Font()  
+        self.font = Font()
+
+    @property
+    def is_default(self):
+        return self.hash_key == Style().hash_key
+
+    @property
+    def hash_key(self):
+        return hash((self.font))
 
     def __eq__(self, other):
-        return self.font == other.font
+        return self.hash_key == other.hash_key
 
     def __hash__(self):
-        return hash(self.font)
+        return self.hash_key
 
     def __str__(self):
         return '{}'.format(self.font)
 
     def __repr__(self):
-        return '<{}>'.format(self.__str__())
+        return '({})'.format(self.__str__())
