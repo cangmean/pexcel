@@ -11,6 +11,7 @@ class Style(object):
 
     def __init__(self):
         self.font = Font()
+        self.borders = None
 
     @property
     def is_default(self):
